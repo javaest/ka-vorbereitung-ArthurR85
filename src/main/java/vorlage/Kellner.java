@@ -4,11 +4,15 @@ public class Kellner extends Person {
     private int mitarbeiterID;
 
     public Kellner(String name, int mitarbeiterID) {
-        setName(name);
+        setName(name);  // Vererbung von der Person-Klasse
         this.mitarbeiterID = mitarbeiterID;
     }
 
-    public int getMitarbeiterID() {
+    public int mitarbeiterID() {
         return mitarbeiterID;
+    }
+
+    public void mitarbeiterID(int mitarbeiterID) {
+        this.mitarbeiterID = mitarbeiterID;
     }
 }
