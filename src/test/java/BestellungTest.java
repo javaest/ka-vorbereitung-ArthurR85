@@ -1,7 +1,6 @@
 package test;
 
 import org.junit.jupiter.api.Test;
-
 import vorlage.Bestellung;
 import vorlage.Gericht;
 import vorlage.Kellner;
@@ -18,8 +17,8 @@ public class BestellungTest {
         Kellner kellner = new Kellner("Anna Schmidt", 101);
         Bestellung bestellung = new Bestellung(1, new Date(), kunde, kellner);
 
-        assertEquals(1, bestellung.bestellnummer());
-        assertNotNull(bestellung.bestelldatum());
+        assertEquals(1, bestellung.getBestellnummer());
+        assertNotNull(bestellung.getBestelldatum());
         assertEquals(kunde, bestellung.getKunde());
         assertEquals(kellner, bestellung.getKellner());
     }
@@ -47,5 +46,12 @@ public class BestellungTest {
         bestellung.gerichtHinzufuegen(gericht2);
 
         assertEquals(20.50, bestellung.getGesamtbetrag(), 0.01);
+    }
+
+    @Test
+    public void testNameValidation() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Kunde("Tom", 1); // Zu kurzer Name
+        });
     }
 }
