@@ -1,58 +1,54 @@
-package vorlage;
+package test;
 
-import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
+import vorlage.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
-import java.util.List;
 
-public class Bestellung {
-    private int bestellnummer;
-    private Date bestelldatum;
-    private List<Gericht> gerichte;
-    private Kunde kunde;
-    private Kellner kellner;
-    private double gesamtbetrag;
+public class BestellungTest {
 
-    public Bestellung(int bestellnummer, Date bestelldatum, Kunde kunde, Kellner kellner) {
-        this.bestellnummer = bestellnummer;
-        this.bestelldatum = bestelldatum;
-        this.gerichte = new ArrayList<>();
-        this.kunde = kunde;
-        this.kellner = kellner;
+    @Test
+    public void testBestellungConstructor() {
+        Kunde kunde = new Kunde("Max Mustermann", 1);
+        Kellner kellner = new Kellner("Anna Schmidt", 101);
+        Bestellung bestellung = new Bestellung(1, new Date(), kunde, kellner);
+
+        assertEquals(1, bestellung.getBestellnummer());
+        assertNotNull(bestellung.getBestelldatum());
+        assertEquals(kunde, bestellung.getKunde());
+        assertEquals(kellner, bestellung.getKellner());
     }
 
-    public int getBestellnummer() {
-        return bestellnummer;
+    @Test
+    public void testGerichtHinzufuegen() {
+        Gericht gericht = new Gericht("Pizza Margherita", "Pizza mit Tomaten und Käse", 8.50);
+        Kunde kunde = new Kunde("Max Mustermann", 1);
+        Kellner kellner = new Kellner("Anna Schmidt", 101);
+        Bestellung bestellung = new Bestellung(1, new Date(), kunde, kellner);
+
+        bestellung.gerichtHinzufuegen(gericht);
+        assertTrue(bestellung.getGerichte().contains(gericht));
     }
 
-    public Date getBestelldatum() {
-        return bestelldatum;
+    @Test
+    public void testGesamtSumme() {
+        Gericht gericht1 = new Gericht("Pizza Margherita", "Pizza mit Tomaten und Käse", 8.50);
+        Gericht gericht2 = new Gericht("Spaghetti Bolognese", "Pasta mit Fleischsauce", 12.00);
+        Kunde kunde = new Kunde("Max Mustermann", 1);
+        Kellner kellner = new Kellner("Anna Schmidt", 101);
+        Bestellung bestellung = new Bestellung(1, new Date(), kunde, kellner);
+
+        bestellung.gerichtHinzufuegen(gericht1);
+        bestellung.gerichtHinzufuegen(gericht2);
+
+        assertEquals(20.50, bestellung.getGesamtbetrag(), 0.01);
     }
 
-    public List<Gericht> getGerichte() {
-        return gerichte;
-    }
-
-    public Kunde getKunde() {
-        return kunde;
-    }
-
-    public Kellner getKellner() {
-        return kellner;
-    }
-
-    public double getGesamtbetrag() {
-        return gesamtbetrag;
-    }
-
-    public void gerichtHinzufuegen(Gericht gericht) {
-        gerichte.add(gericht);
-        gesamtbetragBerechnen();
-    }
-
-    public void gesamtbetragBerechnen() {
-        gesamtbetrag = 0;
-        for (Gericht gericht : gerichte) {
-            gesamtbetrag += gericht.getPreis();
-        }
+    @Test
+    public void testNameValidation() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Kunde("Tom", 1); // Zu kurzer Name
+        });
     }
 }
